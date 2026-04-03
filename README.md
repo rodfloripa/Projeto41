@@ -13,7 +13,7 @@ Acesse http://localhost:8081/
 <li><b>Apache Kafka:</b> Como broker de mensagens de alta performance para o streaming de dados.</li>
 <li><b>Apache NiFi:</b> Ferramenta de ingestão e orquestração de fluxos de dados (Dataflow).</li>
 <li><b>Python:</b> Linguagem base para o sensor (produtor) e o modelo de ML(consumidor).</li>
-<li><b>Scikit-Learn (Random Forest):</b> Algoritmo de Inteligência Artificial para regressão e predição.</li>
+<li><b>Scikit-Learn (Random Forest):</b> Algoritmo de ML para regressão e predição.</li>
 <li><b>Pandas:</b> Para manipulação e estruturação dos dados em tempo real.</li>
 <li><b>Nginx:</b> Servidor web de alto desempenho para hospedar a interface.</li>
 <li><b>Chart.js:</b> Biblioteca JavaScript para a renderização de gráficos dinâmicos.</li>
