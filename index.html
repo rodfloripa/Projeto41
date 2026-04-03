@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Estufa IA</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        .container { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 8px 30px rgba(0,0,0,0.1); width: 90%; max-width: 900px; }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f0f0f0; padding-bottom: 15px; margin-bottom: 20px; }
+        .metrics { display: flex; justify-content: space-around; margin-bottom: 30px; }
+        .metric-box { text-align: center; }
+        .metric-box span { font-size: 0.9rem; color: #666; }
+        .metric-box h2 { margin: 5px 0; color: #333; }
+        .prediction-highlight { color: #007bff; }
+        canvas { width: 100% !important; height: 350px !important; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>Monitoramento de Pressão</h1>
+            <div id="relogio" style="color: #888;">--:--:--</div>
+        </div>
+
+        <div class="metrics">
+            <div class="metric-box">
+                <span>Pressão Real</span>
+                <h2 id="txt-real">--</h2>
+            </div>
+            <div class="metric-box">
+                <span>Previsão IA</span>
+                <h2 id="txt-prev" class="prediction-highlight">--</h2>
+            </div>
+            <div class="metric-box">
+                <span>Temperatura</span>
+                <h2 id="txt-temp">--</h2>
+            </div>
+        </div>
+
+        <canvas id="graficoIA"></canvas>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('graficoIA').getContext('2d');
+        const config = {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [
+                    {
+                        label: 'Real (Sensor)',
+                        borderColor: '#ff6384',
+                        backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                        data: [],
+                        fill: true,
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Predição (Random Forest)',
+                        borderColor: '#007bff',
+                        borderDash: [5, 5],
+                        data: [],
+                        fill: false,
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { position: 'top' } },
+                scales: { y: { beginAtZero: false } }
+            }
+        };
+
+        const grafico = new Chart(ctx, config);
+
+        function atualizar() {
+            fetch('previsao.json?nocache=' + Date.now())
+                .then(res => res.json())
+                .then(data => {
+                    // Atualiza textos
+                    document.getElementById('txt-real').innerText = data.ultima_leitura.pressao.toFixed(2) + " hPa";
+                    document.getElementById('txt-prev').innerText = data.previsao_pressao.toFixed(2) + " hPa";
+                    document.getElementById('txt-temp').innerText = data.ultima_leitura.temperatura.toFixed(2) + " °C";
+                    document.getElementById('relogio').innerText = data.data_processamento;
+
+                    // Atualiza Gráfico
+                    const historico = data.historico;
+                    grafico.data.labels = historico.map(h => h.hora);
+                    grafico.data.datasets[0].data = historico.map(h => h.real);
+                    grafico.data.datasets[1].data = historico.map(h => h.previsao);
+                    
+                    grafico.update('none'); // Update sem animação brusca
+                })
+                .catch(e => console.log("Aguardando dados do modelo..."));
+        }
+
+        setInterval(atualizar, 2000);
+    </script>
+</body>
+</html>
