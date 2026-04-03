@@ -167,7 +167,7 @@ function atualizar() {
         .then(data => { /* Atualiza o gráfico e textos */ });
 }
 ``` 
-<p align="justify"><h4>6. O Servidor: nginx</h4></p>
+<p align="justify"><h4>7. O Servidor: nginx</h4></p>
 
 <p align="justify">O servidor web que entrega a interface ao usuário.</p>
 
