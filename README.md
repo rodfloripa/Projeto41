@@ -120,24 +120,31 @@ def gerar_dados():
     }
 ```
 
-<p align="justify"><h4>5. O Cérebro: model.py</h4></p>
+<p align="justify"><h4>5. O Cérebro: model.py e Persistência em JSON</h4></p>
 
-<p align="justify">Este é o bloco de Machine Learning e processamento analítico.</p>
+<p align="justify">Este bloco representa a inteligência analítica do sistema. Além de processar os dados com Machine Learning, ele atua como uma <b>ponte de dados</b>, transformando o fluxo contínuo do Kafka em um arquivo de estado estruturado (JSON) que serve de fonte para a interface web.</p>
 
 <p align="justify"><ul>
-<li><b>Treinamento Online (RandomForestRegressor):</b> O script acumula os dados recebidos e re-treina a floresta aleatória dinamicamente.</li>
-<li><b>Lógica de Predição:</b> O modelo utiliza a Temperatura e a Umidade para prever a Pressão Atmosférica.</li>
-<li><b>Gerenciador de Histórico:</b> Mantém uma lista circular dos últimos 20 registros para alimentar o gráfico.</li>
+<li><b>Treinamento Online (RandomForestRegressor):</b> O script acumula os dados recebidos e re-treina a floresta aleatória dinamicamente a cada nova mensagem.</li>
+<li><b>Lógica de Predição:</b> O modelo utiliza a Temperatura e a Umidade atuais para prever a Pressão Atmosférica esperada.</li>
+<li><b>Geração do Artefato JSON:</b> O modelo consolida a última leitura, a predição da IA e o histórico de 20 pontos em um único arquivo. Este arquivo é gravado no volume compartilhado, permitindo que o Nginx o sirva instantaneamente sem a necessidade de um banco de dados complexo.</li>
 </ul></p>
 
-<p align="justify"><b>Bloco em Destaque:</b></p>
+<p align="justify"><b>Bloco em Destaque (Lógica de Persistência):</b></p>
 
 ```  
 Python
 
-# Treinamento e predição com Scikit-Learn
-regr.fit(df[['temperatura', 'umidade']], df['pressao'])
-previsao = regr.predict(atual_X)[0]
+# Consolidação dos resultados para o Frontend
+resultado = {
+    'ultima_leitura': ponto,
+    'previsao_pressao': round(float(previsao), 2),
+    'data_processamento': time.strftime('%Y-%m-%d %H:%M:%S'),
+    'historico': historico_grafico # Lista de 20 pontos para o Chart.js
+}
+
+with open('previsao.json', 'w') as f:
+    json.dump(resultado, f) # Serializa e grava no volume compartilhado
 ``` 
 <p align="justify"><h4>6. O Visualizador: index.html</h4></p>
 
