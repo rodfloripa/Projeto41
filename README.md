@@ -27,6 +27,8 @@
 </ul></p>
 
 <p align="justify"><b>Bloco em Destaque:</b></p>
+
+```
 YAML
 
 networks:
@@ -35,6 +37,7 @@ networks:
     ipam:
       config:
         - subnet: 10.5.0.0/16 # Define a sub-rede fixa para evitar conflitos
+``` 
 
 <p align="justify"><h4>2. O Produtor de Dados: sensor.py</h4></p>
 
@@ -47,6 +50,8 @@ networks:
 </ul></p>
 
 <p align="justify"><b>Bloco em Destaque:</b></p>
+
+```  
 Python
 
 def gerar_dados():
@@ -56,6 +61,7 @@ def gerar_dados():
         'pressao': round(random.uniform(1000.0, 1015.0), 2),
         'timestamp': time.time()
     }
+```
 
 <p align="justify"><h4>3. O Cérebro: model.py</h4></p>
 
@@ -68,11 +74,14 @@ def gerar_dados():
 </ul></p>
 
 <p align="justify"><b>Bloco em Destaque:</b></p>
+
+```
 Python
 
 # Treinamento e predição com Scikit-Learn
 regr.fit(df[['temperatura', 'umidade']], df['pressao'])
 previsao = regr.predict(atual_X)[0]
+```
 
 <p align="justify"><h4>4. O Visualizador: index.html</h4></p>
 
@@ -84,6 +93,8 @@ previsao = regr.predict(atual_X)[0]
 </ul></p>
 
 <p align="justify"><b>Bloco em Destaque:</b></p>
+
+```
 JavaScript
 
 // Atualização automática via Fetch API
@@ -92,6 +103,7 @@ function atualizar() {
         .then(res => res.json())
         .then(data => { /* Atualiza o gráfico e textos */ });
 }
+```
 
 <p align="justify"><h4>5. O Servidor: nginx</h4></p>
 
