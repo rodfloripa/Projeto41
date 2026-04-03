@@ -10,7 +10,7 @@ Acesse http://localhost:8081/
 <li><b>Docker & Docker Compose:</b> Para a orquestração de containers e isolamento de serviços.</li>
 <li><b>Apache Kafka:</b> Como broker de mensagens de alta performance para o streaming de dados.</li>
 <li><b>Apache NiFi:</b> Ferramenta de ingestão e orquestração de fluxos de dados (Dataflow).</li>
-<li><b>Python:</b> Linguagem base para o sensor (produtor) e o modelo de IA (consumidor).</li>
+<li><b>Python:</b> Linguagem base para o sensor (produtor) e o modelo de ML(consumidor).</li>
 <li><b>Scikit-Learn (Random Forest):</b> Algoritmo de Inteligência Artificial para regressão e predição.</li>
 <li><b>Pandas:</b> Para manipulação e estruturação dos dados em tempo real.</li>
 <li><b>Nginx:</b> Servidor web de alto desempenho para hospedar a interface.</li>
@@ -24,9 +24,9 @@ Acesse http://localhost:8081/
 <p align="justify">Este arquivo é o coração da infraestrutura. Ele utiliza o conceito de Containers para garantir que cada serviço rode em um ambiente isolado, mas conectado.</p>
 
 <p align="justify"><ul>
-<li><b>Zookeeper & Kafka:</b> Formam a camada de mensageria. O Kafka atua como um "buffer" de alta performance que recebe os dados do sensor e os disponibiliza para o modelo de IA.</li>
+<li><b>Zookeeper & Kafka:</b> Formam a camada de mensageria. O Kafka atua como um "buffer" de alta performance que recebe os dados do sensor e os disponibiliza para o modelo de ML.</li>
 <li><b>Rede Estática (10.5.0.x):</b> Configurada para evitar conflitos de IP e garantir que o Sensor e o Model sempre encontrem o Broker do Kafka.</li>
-<li><b>Volumes:</b> Permitem que o arquivo <b>previsao.json</b> seja compartilhado entre o container de IA (que escreve) e o container Web (que lê).</li>
+<li><b>Volumes:</b> Permitem que o arquivo <b>previsao.json</b> seja compartilhado entre o container de ML (que escreve) e o container Web (que lê).</li>
 </ul></p>
 
 <p align="justify"><b>Bloco em Destaque:</b></p>
@@ -167,7 +167,7 @@ function atualizar() {
 </ul></p>
 
 <p align="justify"><b>Resumo do Fluxo:</b></p>
-<p align="center"><b>Sensor → NiFi → Kafka → Model IA → Nginx → Dashboard</b></p>
+<p align="center"><b>Sensor → NiFi → Kafka → Model IA → Nginx → Gráfico</b></p>
 
 ![Texto Alternativo](https://github.com/rodfloripa/Projeto41/blob/main/previsoes.gif)
 
