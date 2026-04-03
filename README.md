@@ -134,3 +134,6 @@ function atualizar() {
 
 <p align="justify"><b>Resumo do Fluxo:</b></p>
 <p align="center"><b>Sensor → NiFi → Kafka → Model IA → Nginx → Dashboard</b></p>
+
+![Texto Alternativo](https://github.com/rodfloripa/Projeto41/blob/main/previsoes.gif)
+
