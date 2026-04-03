@@ -1,6 +1,7 @@
 <p align="justify">Este projeto consiste em uma infraestrutura completa de <b>Monitoramento e Predição para Estufas Inteligentes</b>, integrando conceitos avançados de Engenharia de Dados (Big Data) e Ciência de Dados. O sistema simula a coleta de telemetria ambiental, transporta esses dados de forma resiliente, processa-os através de um modelo de Machine Learning e os exibe em um gráfico interativo em tempo real.</p>
 
 Para rodar digite docker-compose up
+
 Acesse http://localhost:8081/
 
 <p align="justify"><h3>🛠 Tecnologias Utilizadas</h3></p>
