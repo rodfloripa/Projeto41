@@ -1,5 +1,3 @@
-# Projeto41
-
 <p align="justify">Este projeto consiste em uma infraestrutura completa de <b>Monitoramento e Predição para Estufas Inteligentes</b>, integrando conceitos avançados de Engenharia de Dados (Big Data) e Ciência de Dados. O sistema simula a coleta de telemetria ambiental, transporta esses dados de forma resiliente, processa-os através de um modelo de Machine Learning e os exibe em um gráfico interativo em tempo real.</p>
 
 <p align="justify"><h3>🛠 Tecnologias Utilizadas</h3></p>
@@ -7,6 +5,7 @@
 <p align="justify"><ul>
 <li><b>Docker & Docker Compose:</b> Para a orquestração de containers e isolamento de serviços.</li>
 <li><b>Apache Kafka:</b> Como broker de mensagens de alta performance para o streaming de dados.</li>
+<li><b>Apache NiFi:</b> Ferramenta de ingestão e orquestração de fluxos de dados (Dataflow).</li>
 <li><b>Python:</b> Linguagem base para o sensor (produtor) e o modelo de IA (consumidor).</li>
 <li><b>Scikit-Learn (Random Forest):</b> Algoritmo de Inteligência Artificial para regressão e predição.</li>
 <li><b>Pandas:</b> Para manipulação e estruturação dos dados em tempo real.</li>
@@ -28,7 +27,7 @@
 
 <p align="justify"><b>Bloco em Destaque:</b></p>
 
-```
+``` 
 YAML
 
 networks:
@@ -38,8 +37,30 @@ networks:
       config:
         - subnet: 10.5.0.0/16 # Define a sub-rede fixa para evitar conflitos
 ``` 
+<p align="justify"><h4>2. Ingestão e Fluxo: Apache NiFi</h4></p>
 
-<p align="justify"><h4>2. O Produtor de Dados: sensor.py</h4></p>
+<p align="justify">O Apache NiFi atua como o orquestrador do fluxo de dados (Dataflow). Ele é responsável por coletar, filtrar e rotear as informações de telemetria entre os produtores e o barramento do Kafka.</p>
+
+<p align="justify"><ul>
+<li><b>Gerenciamento Visual:</b> Permite criar pipelines de dados complexos através de uma interface baseada em blocos (Processadores).</li>
+<li><b>Roteamento Inteligente:</b> Pode direcionar dados para diferentes tópicos ou destinos dependendo do conteúdo da mensagem.</li>
+<li><b>Controle de Contrapressão (Backpressure):</b> Garante que o sistema não seja sobrecarregado caso a produção de dados seja maior que a capacidade de consumo.</li>
+</ul></p>
+
+<p align="justify"><b>Bloco em Destaque:</b></p>
+
+```
+YAML
+
+  nifi:
+    image: apache/nifi:latest
+    ports:
+      - "8443:8443" # Interface para desenho do fluxo de dados
+    networks:
+      - greenhouse_net
+```
+
+<p align="justify"><h4>3. O Produtor de Dados: sensor.py</h4></p>
 
 <p align="justify">Este bloco simula o hardware (sensores físicos) da estufa, gerando o fluxo contínuo de dados (Streaming).</p>
 
@@ -51,7 +72,7 @@ networks:
 
 <p align="justify"><b>Bloco em Destaque:</b></p>
 
-```  
+``` 
 Python
 
 def gerar_dados():
@@ -63,7 +84,7 @@ def gerar_dados():
     }
 ```
 
-<p align="justify"><h4>3. O Cérebro: model.py</h4></p>
+<p align="justify"><h4>4. O Cérebro: model.py</h4></p>
 
 <p align="justify">Este é o bloco de Machine Learning e processamento analítico.</p>
 
@@ -75,15 +96,14 @@ def gerar_dados():
 
 <p align="justify"><b>Bloco em Destaque:</b></p>
 
-```
+```  
 Python
 
 # Treinamento e predição com Scikit-Learn
 regr.fit(df[['temperatura', 'umidade']], df['pressao'])
 previsao = regr.predict(atual_X)[0]
-```
-
-<p align="justify"><h4>4. O Visualizador: index.html</h4></p>
+``` 
+<p align="justify"><h4>5. O Visualizador: index.html</h4></p>
 
 <p align="justify">A interface do usuário que transforma dados brutos em decisões visuais.</p>
 
@@ -94,7 +114,7 @@ previsao = regr.predict(atual_X)[0]
 
 <p align="justify"><b>Bloco em Destaque:</b></p>
 
-```
+``` 
 JavaScript
 
 // Atualização automática via Fetch API
@@ -103,9 +123,8 @@ function atualizar() {
         .then(res => res.json())
         .then(data => { /* Atualiza o gráfico e textos */ });
 }
-```
-
-<p align="justify"><h4>5. O Servidor: nginx</h4></p>
+``` 
+<p align="justify"><h4>6. O Servidor: nginx</h4></p>
 
 <p align="justify">O servidor web que entrega a interface ao usuário.</p>
 
@@ -114,7 +133,4 @@ function atualizar() {
 </ul></p>
 
 <p align="justify"><b>Resumo do Fluxo:</b></p>
-<p align="center"><b>O Sensor envia → O Kafka roteia → O Model prevê e grava → O Nginx serve → O Dashboard exibe.</b></p>
-
-![Texto Alternativo](https://github.com/rodfloripa/Projeto41/blob/main/previsoes.gif)
-
+<p align="center"><b>Sensor → NiFi → Kafka → Model IA → Nginx → Dashboard</b></p>
