@@ -64,7 +64,37 @@ YAML
       - greenhouse_net
 ```
 
-<p align="justify"><h4>3. O Produtor de Dados: sensor.py</h4></p>
+<p align="justify"><h4>3. Barramento de Mensageria: Apache Kafka</h4></p>
+
+<p align="justify">O Apache Kafka é a espinha dorsal do projeto, funcionando como um sistema de mensageria distribuída de altíssima performance. Ele garante que os dados enviados pelo NiFi ou pelos sensores fiquem disponíveis de forma persistente e ordenada para o modelo de Inteligência Artificial.</p>
+
+<p align="justify"><ul>
+<li><b>Desacoplamento:</b> Permite que o produtor (sensor) e o consumidor (IA) funcionem em velocidades diferentes sem perda de informação.</li>
+<li><b>Tópicos Particionados:</b> Organiza os fluxos de dados (como o tópico <code>sensores</code>) para permitir escalabilidade futura.</li>
+<li><b>Modo Zookeeper:</b> Utiliza o Zookeeper para gerenciar o estado do cluster e a eleição de líderes, garantindo que o broker esteja sempre disponível.</li>
+</ul></p>
+
+<p align="justify"><b>Bloco em Destaque no Docker:</b></p>
+
+```
+YAML
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 10.5.0.2:2181
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://10.5.0.3:9092,EXTERNAL://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_ENABLE_KRAFT: "false" # Força o uso do Zookeeper para estabilidade
+    networks:
+      greenhouse_net:
+        ipv4_address: 10.5.0.3
+```
+
+<p align="justify"><h4>4. O Produtor de Dados: sensor.py</h4></p>
 
 <p align="justify">Este bloco simula o hardware (sensores físicos) da estufa, gerando o fluxo contínuo de dados (Streaming).</p>
 
@@ -88,7 +118,7 @@ def gerar_dados():
     }
 ```
 
-<p align="justify"><h4>4. O Cérebro: model.py</h4></p>
+<p align="justify"><h4>5. O Cérebro: model.py</h4></p>
 
 <p align="justify">Este é o bloco de Machine Learning e processamento analítico.</p>
 
@@ -107,7 +137,7 @@ Python
 regr.fit(df[['temperatura', 'umidade']], df['pressao'])
 previsao = regr.predict(atual_X)[0]
 ``` 
-<p align="justify"><h4>5. O Visualizador: index.html</h4></p>
+<p align="justify"><h4>6. O Visualizador: index.html</h4></p>
 
 <p align="justify">A interface do usuário que transforma dados brutos em decisões visuais.</p>
 
