@@ -167,7 +167,7 @@ function atualizar() {
 </ul></p>
 
 <p align="justify"><b>Resumo do Fluxo:</b></p>
-<p align="center"><b>Sensor → NiFi → Kafka → Model IA → Nginx → Gráfico</b></p>
+<p align="center"><b>Sensor → NiFi → Kafka → Modelo ML → Nginx → Gráfico</b></p>
 
 ![Texto Alternativo](https://github.com/rodfloripa/Projeto41/blob/main/previsoes.gif)
 
